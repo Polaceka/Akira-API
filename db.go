@@ -91,8 +91,8 @@ func Create(track *Track) (primitive.ObjectID, error) {
 	return oid, nil
 }
 
-// CheckCredentials - checks the credetials
-func CheckCredentials(cred *Credentials) (bson.M, error) {
+// GetCredentials - checks the credetials
+func GetCredentials(cred *Credentials) (bson.M, error) {
 	var result bson.M
 
 	client, ctx, cancel := getConnection()
@@ -105,5 +105,6 @@ func CheckCredentials(cred *Credentials) (bson.M, error) {
 	if err != nil {
 		log.Print(err)
 	}
+
 	return result, nil
 }
