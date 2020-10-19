@@ -8,17 +8,14 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
-)
-
-const (
-	userkey = "tom"
 )
 
 func main() {
 	r := gin.Default()
 	store := cookie.NewStore([]byte("secret"))
-	r.Use(sessions.Sessions("mysession", store))
+	r.Use(sessions.Sessions("sessionID", store))
 	r.POST("/login", login)
 	r.GET("/logout", logout)
 	r.POST("/gen", pwgen)
@@ -64,7 +61,7 @@ func handleCreateTrack(c *gin.Context) {
 
 func authRequired(c *gin.Context) {
 	session := sessions.Default(c)
-	user := session.Get(userkey)
+	user := session.Get("userName")
 	if user == nil {
 		// Abort the request with the appropriate error code
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
@@ -90,8 +87,7 @@ func login(c *gin.Context) {
 		return
 	}
 
-	credDB, _ := CheckCredentials(&credentials)
-	log.Print(credDB)
+	credDB, _ := GetCredentials(&credentials)
 
 	if credDB == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication failed"})
@@ -107,7 +103,8 @@ func login(c *gin.Context) {
 	}
 
 	// Save the username in the session
-	session.Set(userkey, credDB["username"].(string)) // In real world usage you'd set this to the users ID
+	session.Set("userName", credDB["username"].(string))
+	session.Set("userID", credDB["_id"].(primitive.ObjectID).Hex())
 	if err := session.Save(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 		return
@@ -117,12 +114,12 @@ func login(c *gin.Context) {
 
 func logout(c *gin.Context) {
 	session := sessions.Default(c)
-	user := session.Get(userkey)
+	user := session.Get("userName")
 	if user == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
 		return
 	}
-	session.Delete(userkey)
+	session.Delete("userName")
 	if err := session.Save(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 		return
@@ -132,14 +129,16 @@ func logout(c *gin.Context) {
 
 func me(c *gin.Context) {
 	session := sessions.Default(c)
-	user := session.Get(userkey)
-	c.JSON(http.StatusOK, gin.H{"user": user})
+	user := session.Get("userName")
+	userID := session.Get("userID")
+	c.JSON(http.StatusOK, gin.H{"user": user, "ID": userID})
 }
 
 func status(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "You are logged in"})
 }
 
+//temp funktion for generting pw hashes
 func pwgen(c *gin.Context) {
 	var credentials Credentials
 	if err := c.ShouldBindJSON(&credentials); err != nil {
@@ -154,21 +153,15 @@ func pwgen(c *gin.Context) {
 func hashAndSalt(pwd []byte) string {
 
 	// Use GenerateFromPassword to hash & salt pwd
-	// MinCost is just an integer constant provided by the bcrypt
-	// package along with DefaultCost & MaxCost.
-	// The cost can be any value you want provided it isn't lower
-	// than the MinCost (4)
 	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
 	if err != nil {
 		log.Println(err)
-	} // GenerateFromPassword returns a byte slice so we need to
-	// convert the bytes to a string and return it
+	}
+	// return the hash as a string for better storage
 	return string(hash)
 }
 
 func comparePasswords(hashedPwd string, plainPwd []byte) bool {
-	// Since we'll be getting the hashed password from the DB it
-	// will be a string so we'll need to convert it to a byte slice
 	byteHash := []byte(hashedPwd)
 	err := bcrypt.CompareHashAndPassword(byteHash, plainPwd)
 	if err != nil {
