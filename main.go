@@ -19,13 +19,15 @@ func main() {
 	v1.Use(authRequired)
 	{
 		v1.GET("/track", handleGetTracks)
-		v1.GET("track/:name", handlerGetOneTracks)
+		v1.GET("/track/:name", handlerGetOneTracks)
 		v1.POST("/track", handleCreateTrack)
 
 		/* placeholder
 		v1.GET("/event", handleGetEvents)
 		v1.GET("/event/:name", handleGetOneEvent)
+		v1.Get("/event/:name/*groupe") ?
 		v1.Post("/event", handleCreateTrack)
+
 		*/
 	}
 
