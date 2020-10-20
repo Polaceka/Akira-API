@@ -25,7 +25,7 @@ func main() {
 		/* placeholder
 		v1.GET("/event", handleGetEvents)
 		v1.GET("/event/:name", handleGetOneEvent)
-		v1.Post("/event")
+		v1.Post("/event", handleCreateTrack)
 		*/
 	}
 
