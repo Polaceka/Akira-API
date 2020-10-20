@@ -4,9 +4,9 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 // Track - Model of a basic track
 type Track struct {
-	_ID   primitive.ObjectID
-	Title string
-	Body  string
+	_ID         primitive.ObjectID
+	Name        string
+	Description string
 }
 
 // Credentials - User Credentials for the login

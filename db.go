@@ -59,9 +59,8 @@ func GetAllTracks() ([]*Track, error) {
 	client, ctx, cancel := getConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
-	db := client.Database("pit")
-	collection := db.Collection("track")
-	cursor, err := collection.Find(ctx, bson.D{})
+
+	cursor, err := client.Database("pit").Collection("track").Find(ctx, bson.D{})
 	if err != nil {
 		return nil, err
 	}
@@ -72,6 +71,24 @@ func GetAllTracks() ([]*Track, error) {
 		return nil, err
 	}
 	return tracks, nil
+}
+
+// GetOneTrack - search for specif track in the db
+func GetOneTrack(name string) (bson.M, error) {
+	var track bson.M
+
+	client, ctx, cancel := getConnection()
+	defer cancel()
+	defer client.Disconnect(ctx)
+
+	log.Print(name)
+
+	err := client.Database("pit").Collection("track").FindOne(ctx, bson.M{"name": name}).Decode(&track)
+	if err != nil {
+		log.Print(err)
+	}
+
+	return track, nil
 }
 
 //Create creating a track in a mongo
