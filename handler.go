@@ -49,7 +49,7 @@ func handleCreateTrack(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"_id": id})
 }
 
-func handlerGetOneTracks(c *gin.Context) {
+func handlerGetOneTrack(c *gin.Context) {
 	name := c.Param("name")
 
 	track, err := GetOneTrack(name)
@@ -158,4 +158,40 @@ func comparePasswords(hashedPwd string, plainPwd []byte) bool {
 	}
 
 	return true
+}
+
+func handleGetEvents(c *gin.Context) {
+	var loadedEvents, err = GetAllEvents()
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"events": loadedEvents})
+}
+
+func handlerGetOneEvent(c *gin.Context) {
+	name := c.Param("name")
+
+	event, err := GetOneEvent(name)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"event": event})
+}
+
+func handlerCreateEvent(c *gin.Context) {
+	var event Event
+	if err := c.ShouldBindJSON(&event); err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
+		return
+	}
+	log.Print(&event)
+	id, err := CreateEvent(&event)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"_id": id})
 }

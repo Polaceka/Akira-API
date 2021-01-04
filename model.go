@@ -15,3 +15,13 @@ type Credentials struct {
 	Username string
 	Password string
 }
+
+// Event - Model of a basic track
+type Event struct {
+	_ID         primitive.ObjectID
+	Name        string
+	Description string
+	TrackName   string
+	StartDate   primitive.DateTime
+	EndDate     primitive.DateTime
+}
