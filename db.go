@@ -16,7 +16,7 @@ import (
 const (
 	// Timeout operations after N seconds
 	connectTimeout           = 5
-	connectionStringTemplate = "mongodb+srv://%s:%s@%s"
+	connectionStringTemplate = "mongodb://%s:%s@%s"
 )
 
 // GetConnection Retrieves a client to the MongoDB
@@ -27,8 +27,6 @@ func getConnection() (*mongo.Client, context.Context, context.CancelFunc) {
 	clusterEndpoint := os.Getenv("MONGODB_ENDPOINT")
 
 	connectionURI := fmt.Sprintf(connectionStringTemplate, username, password, clusterEndpoint)
-
-	log.Print(connectionURI)
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(connectionURI))
 	if err != nil {
@@ -179,8 +177,11 @@ func CreateEvent(event *Event) (primitive.ObjectID, error) {
 	defer client.Disconnect(ctx)
 	event._ID = primitive.NewObjectID()
 
+	//debug
+	log.Printf("input: %v", *event)
+
 	result, err := client.Database(databaseENV).Collection("event").InsertOne(ctx, event)
-	println(result)
+	log.Printf("Result: %v", result)
 	if err != nil {
 		log.Printf("Could not create Track: %v", err)
 		return primitive.NilObjectID, err

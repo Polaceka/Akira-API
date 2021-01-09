@@ -24,7 +24,7 @@ func authRequired(c *gin.Context) {
 	c.Next()
 }
 
-func handleGetTracks(c *gin.Context) {
+func handlerGetTracks(c *gin.Context) {
 	var loadedTracks, err = GetAllTracks()
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err})
@@ -33,7 +33,7 @@ func handleGetTracks(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"tracks": loadedTracks})
 }
 
-func handleCreateTrack(c *gin.Context) {
+func handlerCreateTrack(c *gin.Context) {
 	var track Track
 	if err := c.ShouldBindJSON(&track); err != nil {
 		log.Print(err)
@@ -160,7 +160,7 @@ func comparePasswords(hashedPwd string, plainPwd []byte) bool {
 	return true
 }
 
-func handleGetEvents(c *gin.Context) {
+func handlerGetEvents(c *gin.Context) {
 	var loadedEvents, err = GetAllEvents()
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err})

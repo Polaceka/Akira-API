@@ -24,4 +24,11 @@ type Event struct {
 	TrackName   string
 	StartDate   primitive.DateTime
 	EndDate     primitive.DateTime
+	Group       []struct {
+		Name        string
+		JourneyTime []struct {
+			Start primitive.DateTime
+			End   primitive.DateTime
+		}
+	}
 }

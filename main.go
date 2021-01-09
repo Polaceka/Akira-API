@@ -18,13 +18,13 @@ func main() {
 	v1 := r.Group("/v1")
 	v1.Use(authRequired)
 	{
-		// Tracks
-		v1.GET("/track", handleGetTracks)
+		// Tacks
+		v1.GET("/track", handlerGetTracks)
 		v1.GET("/track/:name", handlerGetOneTrack)
-		v1.POST("/track", handleCreateTrack)
+		v1.POST("/track", handlerCreateTrack)
 
 		// Events
-		v1.GET("/event", handleGetEvents)
+		v1.GET("/event", handlerGetEvents)
 		v1.GET("/event/:name", handlerGetOneEvent)
 		v1.POST("/event", handlerCreateEvent)
 		/*
