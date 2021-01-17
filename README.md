@@ -3,8 +3,7 @@ RestAPI for Akira (Pit Timer)
 
 ## Documentation
 
-'''json
-
+```json
 {
 "name": "NeuerTest2",
 "description": "Fahrt durchs Lummerland die 11",
@@ -40,8 +39,9 @@ RestAPI for Akira (Pit Timer)
     }
   ]
 }
+```
 
-'''
+
 
 ## Authors
 

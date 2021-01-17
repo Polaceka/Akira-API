@@ -29,6 +29,6 @@ type Event struct {
 		JourneyTime []struct {
 			Start primitive.DateTime `json:"start"`
 			End   primitive.DateTime `json:"end"`
-		}
-	}
+		} `json:"journeytime"`
+	} `json:"group"`
 }

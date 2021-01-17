@@ -28,14 +28,14 @@ func main() {
 	v1.Use(authRequired)
 	{
 		// Tacks
-		v1.GET("/tracks", handlerGetTracks)
-		v1.GET("/tracks/:id", handlerGetOneTrack)
-		v1.POST("/tracks", handlerCreateTrack)
+		v1.GET("/track", handlerGetTracks)
+		v1.GET("/track/:id", handlerGetOneTrack)
+		v1.POST("/track", handlerCreateTrack)
 
 		// Events
-		v1.GET("/events", handlerGetEvents)
-		v1.GET("/events/:id", handlerGetOneEvent)
-		v1.POST("/events", handlerCreateEvent)
+		v1.GET("/event", handlerGetEvents)
+		v1.GET("/event/:id", handlerGetOneEvent)
+		v1.POST("/event", handlerCreateEvent)
 		/*
 			v1.Get("/event/:name/*groupe") ?
 		*/
