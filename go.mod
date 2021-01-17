@@ -1,4 +1,4 @@
-module polaceka/Akira-API
+module github.com/polaceka/Akira-API
 
 go 1.14
 
