@@ -97,7 +97,7 @@ func Create(track *Track) (primitive.ObjectID, error) {
 	client, ctx, cancel := getConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
-	track._ID = primitive.NewObjectID()
+	track.ID = primitive.NewObjectID()
 
 	result, err := client.Database(databaseENV).Collection("track").InsertOne(ctx, track)
 	println(result)
@@ -129,53 +129,69 @@ func GetCredentials(cred *Credentials) (bson.M, error) {
 }
 
 // GetAllEvents Retrives all events from the db
-func GetAllEvents() ([]*Track, error) {
+func GetAllEvents() ([]*Event, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
-	var tracks []*Track
+	var events []*Event
+	var event *Event
 
 	client, ctx, cancel := getConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 
-	cursor, err := client.Database(databaseENV).Collection("event").Find(ctx, bson.D{})
+	cursor, err := client.Database(databaseENV).Collection("event").Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
+
+	for cursor.Next(ctx) {
+		cursor.Decode(&event)
+		log.Println(event)
+		log.Println("")
+		log.Println(events)
+		log.Println("")
+		events = append(events, event)
+	}
+
 	defer cursor.Close(ctx)
-	err = cursor.All(ctx, &tracks)
+
 	if err != nil {
 		log.Printf("Failed marshalling %v", err)
 		return nil, err
 	}
-	return tracks, nil
+
+	log.Print(events)
+
+	return events, nil
 }
 
 // GetOneEvent - search for specif event in the db
-func GetOneEvent(name string) (bson.M, error) {
+func GetOneEvent(id string) (*Event, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
-	var event bson.M
+	var event *Event
 
 	client, ctx, cancel := getConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 
-	log.Print(name)
+	objID, _ := primitive.ObjectIDFromHex(id)
 
-	err := client.Database(databaseENV).Collection("event").FindOne(ctx, bson.M{"name": name}).Decode(&event)
+	err := client.Database(databaseENV).Collection("event").FindOne(ctx, bson.M{"_id": objID}).Decode(&event)
 	if err != nil {
 		log.Print(err)
 	}
 
+	log.Println(event)
+
 	return event, nil
 }
 
-// CreateEvent creating a track in a mongo
+// CreateEvent creating a event
 func CreateEvent(event *Event) (primitive.ObjectID, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	client, ctx, cancel := getConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
-	event._ID = primitive.NewObjectID()
+	event.ID = primitive.NewObjectID()
 
 	//debug
 	log.Printf("input: %v", *event)

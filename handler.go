@@ -50,9 +50,9 @@ func handlerCreateTrack(c *gin.Context) {
 }
 
 func handlerGetOneTrack(c *gin.Context) {
-	name := c.Param("name")
+	id := c.Param("id")
 
-	track, err := GetOneTrack(name)
+	track, err := GetOneTrack(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err})
 		return
@@ -119,7 +119,7 @@ func me(c *gin.Context) {
 	session := sessions.Default(c)
 	user := session.Get("userName")
 	userID := session.Get("userID")
-	c.JSON(http.StatusOK, gin.H{"user": user, "ID": userID})
+	c.JSON(http.StatusOK, gin.H{"user": user, "id": userID})
 }
 
 func status(c *gin.Context) {
@@ -170,9 +170,9 @@ func handlerGetEvents(c *gin.Context) {
 }
 
 func handlerGetOneEvent(c *gin.Context) {
-	name := c.Param("name")
+	id := c.Param("id")
 
-	event, err := GetOneEvent(name)
+	event, err := GetOneEvent(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err})
 		return
@@ -193,5 +193,5 @@ func handlerCreateEvent(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"_id": id})
+	c.JSON(http.StatusOK, gin.H{"id": id})
 }
