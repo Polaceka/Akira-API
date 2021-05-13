@@ -51,7 +51,7 @@ func getConnection() (*mongo.Client, context.Context, context.CancelFunc) {
 	return client, ctx, cancel
 }
 
-// GetAllTracks Retrives all tracks from the db
+// GetAllTracks Retrieves all tracks from the db
 func GetAllTracks() ([]*model.Track, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var tracks []*model.Track
@@ -73,7 +73,7 @@ func GetAllTracks() ([]*model.Track, error) {
 	return tracks, nil
 }
 
-// GetOneTrack - search for specif track in the db
+// GetOneTrack - search for specific track in the db
 func GetOneTrack(name string) (bson.M, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var track bson.M
@@ -110,7 +110,7 @@ func Create(track *model.Track) (primitive.ObjectID, error) {
 	return oid, nil
 }
 
-// GetCredentials - checks the credetials
+// GetCredentials - checks the credentials
 func GetCredentials(cred *model.Credentials) (bson.M, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var result bson.M
@@ -129,7 +129,7 @@ func GetCredentials(cred *model.Credentials) (bson.M, error) {
 	return result, nil
 }
 
-// GetAllEvents Retrives all events from the db
+// GetAllEvents Retrieves all events from the db
 func GetAllEvents() ([]*model.Event, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var events []*model.Event
@@ -165,7 +165,7 @@ func GetAllEvents() ([]*model.Event, error) {
 	return events, nil
 }
 
-// GetOneEvent - search for specif event in the db
+// GetOneEvent - search for specific event in the db
 func GetOneEvent(id string) (*model.Event, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var event *model.Event
