@@ -21,8 +21,11 @@ func main() {
 
 	r.Use(cors.New(config))
 
+	// authentication
 	r.POST("/login", routes.Login)
 	r.GET("/logout", routes.Logout)
+
+	// dev
 	r.POST("/gen", routes.Pwgen)
 
 	// Routing API V1
@@ -39,11 +42,11 @@ func main() {
 		v1.GET("/event/:id", routes.GetOneEvent)
 		v1.POST("/event", routes.CreateEvent)
 		/*
-			v1.Get("/event/:name/*groupe") ?
+			v1.Get("/event/:name/*group") ?
 		*/
 	}
 
-	// currently for dev ussage
+	// currently for dev usage
 	r.GET("/me", middleware.AuthRequired, routes.Me)
 	r.GET("/status", middleware.AuthRequired, routes.Status)
 

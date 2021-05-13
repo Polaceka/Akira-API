@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	gin "github.com/gin-gonic/gin"
 	db "github.com/polaceka/Akira-API/database"
 	"github.com/polaceka/Akira-API/model"
 )
