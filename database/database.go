@@ -133,7 +133,6 @@ func GetCredentials(cred *model.Credentials) (bson.M, error) {
 func GetAllEvents() ([]*model.Event, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var events []*model.Event
-	var event *model.Event
 
 	client, ctx, cancel := getConnection()
 	defer cancel()
@@ -144,16 +143,8 @@ func GetAllEvents() ([]*model.Event, error) {
 		return nil, err
 	}
 
-	for cursor.Next(ctx) {
-		cursor.Decode(&event)
-		log.Println(event)
-		log.Println("")
-		log.Println(events)
-		log.Println("")
-		events = append(events, event)
-	}
-
 	defer cursor.Close(ctx)
+	err = cursor.All(ctx, &events)
 
 	if err != nil {
 		log.Printf("Failed marshalling %v", err)
