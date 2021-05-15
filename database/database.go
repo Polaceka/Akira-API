@@ -151,8 +151,6 @@ func GetAllEvents() ([]*model.Event, error) {
 		return nil, err
 	}
 
-	log.Print(events)
-
 	return events, nil
 }
 
@@ -171,8 +169,6 @@ func GetOneEvent(id string) (*model.Event, error) {
 	if err != nil {
 		log.Print(err)
 	}
-
-	log.Println(event)
 
 	return event, nil
 }
