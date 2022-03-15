@@ -32,19 +32,20 @@ func main() {
 	v1 := r.Group("/v1")
 	v1.Use(middleware.AuthRequired)
 	{
-		// Tacks
-		v1.GET("/track", routes.GetTracks)
-		v1.GET("/track/:id", routes.GetOneTrack)
 		v1.POST("/track", routes.CreateTrack)
-
-		// Events
-		v1.GET("/event", routes.GetEvents)
-		v1.GET("/event/:id", routes.GetOneEvent)
 		v1.POST("/event", routes.CreateEvent)
 		/*
 			v1.Get("/event/:name/*group") ?
 		*/
 	}
+
+	// Tacks
+	v1.GET("/track", routes.GetTracks)
+	v1.GET("/track/:id", routes.GetOneTrack)
+
+	// Events
+	v1.GET("/event", routes.GetEvents)
+	v1.GET("/event/:id", routes.GetOneEvent)
 
 	// currently for dev usage
 	r.GET("/me", middleware.AuthRequired, routes.Me)
