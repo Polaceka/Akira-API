@@ -51,7 +51,7 @@ func getConnection() (*mongo.Client, context.Context, context.CancelFunc) {
 	return client, ctx, cancel
 }
 
-// GetAllTracks Retrives all tracks from the db
+// GetAllTracks Retrieves all tracks from the db
 func GetAllTracks() ([]*model.Track, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var tracks []*model.Track
@@ -73,7 +73,7 @@ func GetAllTracks() ([]*model.Track, error) {
 	return tracks, nil
 }
 
-// GetOneTrack - search for specif track in the db
+// GetOneTrack - search for specific track in the db
 func GetOneTrack(name string) (bson.M, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var track bson.M
@@ -110,7 +110,7 @@ func Create(track *model.Track) (primitive.ObjectID, error) {
 	return oid, nil
 }
 
-// GetCredentials - checks the credetials
+// GetCredentials - checks the credentials
 func GetCredentials(cred *model.Credentials) (bson.M, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var result bson.M
@@ -129,11 +129,10 @@ func GetCredentials(cred *model.Credentials) (bson.M, error) {
 	return result, nil
 }
 
-// GetAllEvents Retrives all events from the db
+// GetAllEvents Retrieves all events from the db
 func GetAllEvents() ([]*model.Event, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var events []*model.Event
-	var event *model.Event
 
 	client, ctx, cancel := getConnection()
 	defer cancel()
@@ -144,28 +143,18 @@ func GetAllEvents() ([]*model.Event, error) {
 		return nil, err
 	}
 
-	for cursor.Next(ctx) {
-		cursor.Decode(&event)
-		log.Println(event)
-		log.Println("")
-		log.Println(events)
-		log.Println("")
-		events = append(events, event)
-	}
-
 	defer cursor.Close(ctx)
+	err = cursor.All(ctx, &events)
 
 	if err != nil {
 		log.Printf("Failed marshalling %v", err)
 		return nil, err
 	}
 
-	log.Print(events)
-
 	return events, nil
 }
 
-// GetOneEvent - search for specif event in the db
+// GetOneEvent - search for specific event in the db
 func GetOneEvent(id string) (*model.Event, error) {
 	databaseENV := os.Getenv("MONGODB_DATABASE")
 	var event *model.Event
@@ -180,8 +169,6 @@ func GetOneEvent(id string) (*model.Event, error) {
 	if err != nil {
 		log.Print(err)
 	}
-
-	log.Println(event)
 
 	return event, nil
 }

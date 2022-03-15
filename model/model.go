@@ -22,7 +22,7 @@ type Event struct {
 	Name        string             `json:"name"`
 	Description string             `json:"description"`
 	TrackName   string             `json:"trackname"`
-	StartDate   primitive.DateTime `json:"stardate"`
+	StartDate   primitive.DateTime `json:"startdate"`
 	EndDate     primitive.DateTime `json:"enddate"`
 	Group       []struct {
 		Name        string `json:"name"`
